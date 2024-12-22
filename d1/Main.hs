@@ -6,11 +6,11 @@ testFile = "d1/test.txt"
 
 main :: IO ()
 main = do
-  porcess inputFile solve
-  porcess inputFile solve'
+  process inputFile solve
+  process inputFile solve'
 
-porcess :: String -> (String -> Int) -> IO ()
-porcess file f = do
+process :: String -> (String -> Int) -> IO ()
+process file f = do
   input <- readFile file
   putStrLn $ show $ f input
 
