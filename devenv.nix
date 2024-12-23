@@ -5,5 +5,8 @@
     haskellPackages.doctest
   ];
 
-  languages.haskell.enable = true;
+  languages.haskell = {
+    enable = true;
+    package = pkgs.haskell.compiler.ghc910;
+  };
 }
