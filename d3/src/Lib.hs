@@ -1,4 +1,4 @@
-module Lib (main, solve) where
+module Lib (main, solve, solve') where
 
 import System.IO.Unsafe (unsafePerformIO)
 import Text.Regex (mkRegex, matchRegex, matchRegexAll, Regex)
@@ -11,7 +11,7 @@ main :: IO ()
 main = do
   process inputFile solve
   putStrLn "==="
-  process inputFile solve2
+  process inputFile solve'
 
 process :: String -> (String -> Int) -> IO ()
 process file f = do
@@ -31,11 +31,11 @@ regex2 = mkRegex "(mul|do|don't)\\((([0-9]{1,3}),([0-9]{1,3}))?\\)"
 solve :: String -> Int
 solve s = sum $ map (uncurry (*)) $ buildPairs s
 
--- | solve2
--- >>> solve2 (unsafePerformIO $ readFile test2File)
+-- | solve'
+-- >>> solve' (unsafePerformIO $ readFile test2File)
 -- 48
-solve2 :: String -> Int
-solve2 s = sum $ map (uncurry (*)) $ buildPairs' s
+solve' :: String -> Int
+solve' s = sum $ map (uncurry (*)) $ buildPairs' s
 
 buildPairs' :: String -> [(Int, Int)]
 buildPairs' = res [] True
