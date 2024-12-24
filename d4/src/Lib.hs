@@ -3,6 +3,7 @@ module Lib (main, solve, solve') where
 import System.IO.Unsafe (unsafePerformIO)
 import Data.List (transpose)
 import Data.Text (breakOnAll, pack, unpack, Text)
+import Data.Tuple.Extra (fst3)
 
 inputFile = "data/input.txt"
 testFile = "data/test.txt"
@@ -42,14 +43,48 @@ solve :: String -> Int
 solve s = let
   ss = lines s
   in 
+    sum [
       findXmas ss 
-    + findXmas (transpose ss) 
-    + findXmas (map reverse ss) 
-    + findXmas (map reverse $ transpose ss) 
-    + findXmas (diagonals ss)
-    + findXmas (diagonals $ transpose ss) 
-    + findXmas (diagonals $ map reverse ss) 
-    + findXmas (diagonals $ transpose $ map reverse ss) 
+    , findXmas (transpose ss) 
+    , findXmas (map reverse ss) 
+    , findXmas (map reverse $ transpose ss) 
+    , findXmas (diagonals ss)
+    , findXmas (diagonals $ transpose ss) 
+    , findXmas (diagonals $ map reverse ss) 
+    , findXmas (diagonals $ transpose $ map reverse ss) 
+    ]
 
+
+correct :: [String] -> Bool
+correct ss = ss !! 1 !! 1 == 'A'
+        && 
+          (
+            (ss !! 0 !! 0 == 'M' && ss !! 0 !! 2 == 'M' && ss !! 2 !! 0 == 'S' && ss !! 2 !! 2 == 'S')
+            || (ss !! 0 !! 0 == 'M' && ss !! 0 !! 2 == 'S' && ss !! 2 !! 0 == 'S' && ss !! 2 !! 2 == 'M')
+            || (ss !! 0 !! 0 == 'S' && ss !! 0 !! 2 == 'S' && ss !! 2 !! 0 == 'M' && ss !! 2 !! 2 == 'M')
+            || (ss !! 0 !! 0 == 'S' && ss !! 0 !! 2 == 'M' && ss !! 2 !! 0 == 'M' && ss !! 2 !! 2 == 'S')
+            || (ss !! 0 !! 0 == 'M' && ss !! 0 !! 2 == 'S' && ss !! 2 !! 0 == 'M' && ss !! 2 !! 2 == 'S')
+            || (ss !! 0 !! 0 == 'S' && ss !! 0 !! 2 == 'M' && ss !! 2 !! 0 == 'S' && ss !! 2 !! 2 == 'M')
+          )
+
+fstCorrect ss = fst3 (ss !! 1 !! 1) == 'A'
+        && 
+          (
+            (fst3 (ss !! 0 !! 0) == 'M' && fst3 (ss !! 0 !! 2) == 'M' && fst3 (ss !! 2 !! 0) == 'S' && fst3 (ss !! 2 !! 2) == 'S')
+            || (fst3 (ss !! 0 !! 0) == 'M' && fst3 (ss !! 0 !! 2) == 'S' && fst3 (ss !! 2 !! 0) == 'S' && fst3 (ss !! 2 !! 2) == 'M')
+            || (fst3 (ss !! 0 !! 0) == 'S' && fst3 (ss !! 0 !! 2) == 'S' && fst3 (ss !! 2 !! 0) == 'M' && fst3 (ss !! 2 !! 2) == 'M')
+            || (fst3 (ss !! 0 !! 0) == 'S' && fst3 (ss !! 0 !! 2) == 'M' && fst3 (ss !! 2 !! 0) == 'M' && fst3 (ss !! 2 !! 2) == 'S')
+            || (fst3 (ss !! 0 !! 0) == 'M' && fst3 (ss !! 0 !! 2) == 'S' && fst3 (ss !! 2 !! 0) == 'M' && fst3 (ss !! 2 !! 2) == 'S')
+            || (fst3 (ss !! 0 !! 0) == 'S' && fst3 (ss !! 0 !! 2) == 'M' && fst3 (ss !! 2 !! 0) == 'S' && fst3 (ss !! 2 !! 2) == 'M')
+          )
+
+submatrics3x3 :: [[a]] -> [[[a]]]
+submatrics3x3 mat = [map (take 3) (take 3 (drop r (map (drop c) mat))) | r <- [0..length mat - 3], c <- [0..length (head mat) - 3]]
+
+imat mat = map (\(i, xs) -> map (\(j,x) -> (x,i,j)) xs) $ zip [0..] $ map (zip [0..]) mat
+
+-- | solve'
+-- >>> solve' testData
+-- 9
 solve' :: String -> Int
-solve' = undefined
+solve' s = length $ filter correct $ submatrics3x3 $ lines s
