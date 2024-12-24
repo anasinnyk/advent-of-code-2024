@@ -19,6 +19,9 @@ process file f = do
   input <- readFile file
   putStrLn $ show $ f input
 
+inputData :: String
+inputData = unsafePerformIO $ readFile inputFile
+
 testData :: String
 testData = unsafePerformIO $ readFile testFile
 
@@ -57,26 +60,20 @@ solve s = let
 
 correct :: [String] -> Bool
 correct ss = ss !! 1 !! 1 == 'A'
-        && 
-          (
-            (ss !! 0 !! 0 == 'M' && ss !! 0 !! 2 == 'M' && ss !! 2 !! 0 == 'S' && ss !! 2 !! 2 == 'S')
-            || (ss !! 0 !! 0 == 'M' && ss !! 0 !! 2 == 'S' && ss !! 2 !! 0 == 'S' && ss !! 2 !! 2 == 'M')
-            || (ss !! 0 !! 0 == 'S' && ss !! 0 !! 2 == 'S' && ss !! 2 !! 0 == 'M' && ss !! 2 !! 2 == 'M')
-            || (ss !! 0 !! 0 == 'S' && ss !! 0 !! 2 == 'M' && ss !! 2 !! 0 == 'M' && ss !! 2 !! 2 == 'S')
-            || (ss !! 0 !! 0 == 'M' && ss !! 0 !! 2 == 'S' && ss !! 2 !! 0 == 'M' && ss !! 2 !! 2 == 'S')
-            || (ss !! 0 !! 0 == 'S' && ss !! 0 !! 2 == 'M' && ss !! 2 !! 0 == 'S' && ss !! 2 !! 2 == 'M')
-          )
+        && (
+             (ss !! 0 !! 0 == 'M' && ss !! 0 !! 2 == 'M' && ss !! 2 !! 2 == 'S' && ss !! 2 !! 0 == 'S')
+          || (ss !! 0 !! 0 == 'S' && ss !! 0 !! 2 == 'S' && ss !! 2 !! 2 == 'M' && ss !! 2 !! 0 == 'M')
+          || (ss !! 0 !! 0 == 'S' && ss !! 0 !! 2 == 'M' && ss !! 2 !! 2 == 'M' && ss !! 2 !! 0 == 'S')
+          || (ss !! 0 !! 0 == 'M' && ss !! 0 !! 2 == 'S' && ss !! 2 !! 2 == 'S' && ss !! 2 !! 0 == 'M')
+        )
 
 fstCorrect ss = fst3 (ss !! 1 !! 1) == 'A'
-        && 
-          (
-            (fst3 (ss !! 0 !! 0) == 'M' && fst3 (ss !! 0 !! 2) == 'M' && fst3 (ss !! 2 !! 0) == 'S' && fst3 (ss !! 2 !! 2) == 'S')
-            || (fst3 (ss !! 0 !! 0) == 'M' && fst3 (ss !! 0 !! 2) == 'S' && fst3 (ss !! 2 !! 0) == 'S' && fst3 (ss !! 2 !! 2) == 'M')
-            || (fst3 (ss !! 0 !! 0) == 'S' && fst3 (ss !! 0 !! 2) == 'S' && fst3 (ss !! 2 !! 0) == 'M' && fst3 (ss !! 2 !! 2) == 'M')
-            || (fst3 (ss !! 0 !! 0) == 'S' && fst3 (ss !! 0 !! 2) == 'M' && fst3 (ss !! 2 !! 0) == 'M' && fst3 (ss !! 2 !! 2) == 'S')
-            || (fst3 (ss !! 0 !! 0) == 'M' && fst3 (ss !! 0 !! 2) == 'S' && fst3 (ss !! 2 !! 0) == 'M' && fst3 (ss !! 2 !! 2) == 'S')
-            || (fst3 (ss !! 0 !! 0) == 'S' && fst3 (ss !! 0 !! 2) == 'M' && fst3 (ss !! 2 !! 0) == 'S' && fst3 (ss !! 2 !! 2) == 'M')
-          )
+        && (
+             (fst3 (ss !! 0 !! 0) == 'M' && fst3 (ss !! 0 !! 2) == 'M' && fst3 (ss !! 2 !! 2) == 'S' && fst3 (ss !! 2 !! 0) == 'S')
+          || (fst3 (ss !! 0 !! 0) == 'S' && fst3 (ss !! 0 !! 2) == 'S' && fst3 (ss !! 2 !! 2) == 'M' && fst3 (ss !! 2 !! 0) == 'M')
+          || (fst3 (ss !! 0 !! 0) == 'S' && fst3 (ss !! 0 !! 2) == 'M' && fst3 (ss !! 2 !! 2) == 'M' && fst3 (ss !! 2 !! 0) == 'S')
+          || (fst3 (ss !! 0 !! 0) == 'M' && fst3 (ss !! 0 !! 2) == 'S' && fst3 (ss !! 2 !! 2) == 'S' && fst3 (ss !! 2 !! 0) == 'M')
+        )
 
 submatrics3x3 :: [[a]] -> [[[a]]]
 submatrics3x3 mat = [map (take 3) (take 3 (drop r (map (drop c) mat))) | r <- [0..length mat - 3], c <- [0..length (head mat) - 3]]
