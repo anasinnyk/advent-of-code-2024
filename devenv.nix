@@ -2,7 +2,9 @@
 
 {
   packages = with pkgs; [
+    haskellPackages.hoogle
     haskellPackages.doctest
+    haskellPackages.haskell-dap
   ];
 
   languages.haskell = {
